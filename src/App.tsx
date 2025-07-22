@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "./components/ui/button";
 
 export default function App() {
-  const [count, setCount] = useState(0);
+  const ipc = () => {
+    window.ipcRenderer.send("ping");
+    toast.success("IPC Message Sent");
+  };
   return (
     <h1 className="flex flex-col min-h-screen items-center justify-center">
       <div className="flex gap-2 ">
-        <Button onClick={() => setCount(count + 1)}>Increament</Button>
-        <Button onClick={() => setCount(count - 1)}>Decreament</Button>
+        <Button onClick={ipc}>Send IPC</Button>
       </div>
-
-      <p className="text-2xl">{count}</p>
     </h1>
   );
 }
