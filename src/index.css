@@ -127,4 +127,11 @@
     @apply overflow-hidden;
     @apply bg-background text-foreground;
   }
+  header {
+    -webkit-app-region: drag;
+  }
+
+  button {
+    -webkit-app-region: no-drag;
+  }
 }
