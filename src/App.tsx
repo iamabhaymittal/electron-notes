@@ -1,16 +1,9 @@
-import { toast } from "sonner";
-import { Button } from "./components/ui/button";
-
-export default function App() {
-  const ipc = () => {
-    window.ipcRenderer.send("ping");
-    toast.success("IPC Message Sent");
-  };
+function App() {
   return (
-    <h1 className="flex flex-col min-h-screen items-center justify-center ">
-      <div className="flex gap-2  ">
-        <Button onClick={ipc}>Send IPCs</Button>
-      </div>
-    </h1>
-  );
+    <div className="flex h-full items-center justify-center">
+      <span className="text-4xl text-blue-500">Hello from Electron</span>
+    </div>
+  )
 }
+
+export default App
