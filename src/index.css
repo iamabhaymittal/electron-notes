@@ -118,7 +118,8 @@
     /* @apply border-border outline-ring/50; */
     @apply h-full;
   }
-  html,body {
+  html,
+  body {
     @apply h-full;
     @apply select-none;
     @apply bg-transparent;

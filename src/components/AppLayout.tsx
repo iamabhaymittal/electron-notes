@@ -22,7 +22,7 @@ export const Sidebar = ({
     <aside
       className={twMerge(
         "w-[250px] mt-10 h-[100vh + 10px] overflow-auto",
-        className
+        className,
       )}
       {...props}
     >
@@ -42,7 +42,7 @@ export const Content = forwardRef<HTMLDivElement, ComponentProps<"div">>(
         {children}
       </div>
     )
-  }
+  },
 )
 
 Content.displayName = "Content"
