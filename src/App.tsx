@@ -2,6 +2,7 @@ import {
   ActionButtonsRow,
   Content,
   DraggableTopBar,
+  MarkdownEditor,
   NotePreviewList,
   RootLayout,
   Sidebar,
@@ -17,7 +18,7 @@ const App = () => {
           <NotePreviewList className="mt-3 space-y-1" />
         </Sidebar>
         <Content className="border-l bg-zinc-900/50 border-l-white/20">
-          Content
+          <MarkdownEditor />
         </Content>
       </RootLayout>
     </>
