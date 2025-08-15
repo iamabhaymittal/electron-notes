@@ -14,6 +14,31 @@ export const notesAtom = unwrap(notesAtomAsync, (prev) => prev)
 
 export const selectedNoteIndexAtom = atom<number | null>(null)
 
+// Helper function to generate unique note titles
+const generateUniqueTitle = (existingNotes: NoteInfo[]): string => {
+  // Extract all numbers from existing note titles
+  const existingNumbers = existingNotes
+    .map((note) => {
+      const match = note.title.match(/^Note-(\d+)$/)
+      return match ? parseInt(match[1], 10) : 0
+    })
+    .filter((num) => num > 0)
+    .sort((a, b) => a - b)
+
+  // Find the first available number (starting from 1)
+  let counter = 1
+  for (const existingNum of existingNumbers) {
+    if (existingNum !== counter) {
+      // Found a gap, use this number
+      return `Note-${counter}`
+    }
+    counter++
+  }
+
+  // No gaps found, use the next number after the highest existing number
+  return `Note-${counter}`
+}
+
 const selectedNoteAtomAsync = atom(async (get) => {
   const notes = get(notesAtom)
   const selectedNoteIndex = get(selectedNoteIndexAtom)
@@ -81,7 +106,8 @@ export const createEmptyNoteAtom = atom(null, async (get, set) => {
   const notes = get(notesAtom)
 
   if (!notes) return
-  const title = `Note-${notes.length + 1}`
+
+  const title = generateUniqueTitle(notes)
   const newNote: NoteInfo = {
     title,
     lastEditTime: Date.now(),
