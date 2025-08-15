@@ -10,6 +10,8 @@ import {
   ReadNote,
   WriteNote,
 } from "../../src/shared/types"
+import { dialog } from "electron"
+import path from "path"
 
 export const getRootDir = () => {
   return `${homedir()}/${appDirectoryName}`
@@ -85,19 +87,42 @@ export const deleteNote: DeleteNote = async (fileName) => {
   return unlink(`${rootDir}/${fileName}.md`)
 }
 
-export const newNote: NewNote = async (fileName) => {
+export const newNote: NewNote = async () => {
   const rootDir = getRootDir()
 
   try {
     // Ensure the directory exists
     await ensureDir(rootDir)
 
+    const { filePath, canceled } = await dialog.showSaveDialog({
+      title: "New Note",
+      defaultPath: `${rootDir}/Untitled.md`,
+      buttonLabel: "Create",
+      properties: ["showOverwriteConfirmation"],
+      showsTagField: false,
+      filters: [{ name: "Markdown", extensions: ["md"] }],
+    })
+    if (canceled || !filePath) return ""
+
+    const { name: fileName, dir: parentDir } = path.parse(filePath)
+
+    if (parentDir !== rootDir) {
+      await dialog.showMessageBox({
+        type: "error",
+        title: "Error",
+        message: "Please save the note in the app directory",
+      })
+      return ""
+    }
+
     // Create the file with initial content
-    return await writeFile(`${rootDir}/${fileName}.md`, "", {
+    await writeFile(`${parentDir}/${fileName}.md`, "", {
       encoding: fileEncoding,
     })
+
+    return fileName
   } catch (error) {
-    console.error(`Error creating note ${fileName}:`, error)
-    throw error
+    console.error(`Error creating note:`, error)
+    return ""
   }
 }

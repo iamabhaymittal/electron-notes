@@ -107,18 +107,15 @@ export const createEmptyNoteAtom = atom(null, async (get, set) => {
 
   if (!notes) return
 
-  const title = generateUniqueTitle(notes)
-  const newNote: NoteInfo = {
-    title,
-    lastEditTime: Date.now(),
-  }
-
   try {
     // Create the note file first
-    await window.context.newNote(title)
+    const title = await window.context.newNote()
 
     // Only update the UI after successful file creation
-    set(notesAtom, [newNote, ...notes.filter((note) => note.title !== title)])
+    set(notesAtom, [
+      { title, lastEditTime: Date.now() },
+      ...notes.filter((note) => note.title !== title),
+    ])
     set(selectedNoteIndexAtom, 0)
   } catch (error) {
     console.error("Failed to create new note:", error)
