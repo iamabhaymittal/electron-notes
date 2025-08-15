@@ -1,11 +1,18 @@
 {
-  "name": "god-mode",
-  "private": true,
-  "version": "0.0.0",
+  "name": "notemark",
+  "private": false,
+  "version": "1.0.0",
+  "description": "A beautiful markdown note-taking app built with Electron and React",
+  "homepage": "https://github.com/yourusername/notemark",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
+    "build:mac": "tsc && vite build && electron-builder --mac",
+    "build:win": "tsc && vite build && electron-builder --win",
+    "build:linux": "tsc && vite build && electron-builder --linux",
+    "pack": "tsc && vite build && electron-builder --dir",
+    "dist": "tsc && vite build && electron-builder",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
