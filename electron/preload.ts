@@ -1,5 +1,11 @@
 import { ipcRenderer, contextBridge } from "electron"
-import { GetNotes, ReadNote, WriteNote } from "@/shared/types"
+import {
+  GetNotes,
+  ReadNote,
+  WriteNote,
+  DeleteNote,
+  NewNote,
+} from "@/shared/types"
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld("context", {
@@ -10,6 +16,10 @@ contextBridge.exposeInMainWorld("context", {
     ipcRenderer.invoke("readNote", ...args),
   writeNote: (...args: Parameters<WriteNote>) =>
     ipcRenderer.invoke("writeNote", ...args),
+  deleteNote: (...args: Parameters<DeleteNote>) =>
+    ipcRenderer.invoke("deleteNote", ...args),
+  newNote: (...args: Parameters<NewNote>) =>
+    ipcRenderer.invoke("newNote", ...args),
   on(...args: Parameters<typeof ipcRenderer.on>) {
     const [channel, listener] = args
     return ipcRenderer.on(channel, (event, ...args) => listener(event, ...args))

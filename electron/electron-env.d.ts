@@ -1,5 +1,11 @@
 /// <reference types="vite-plugin-electron/electron-env" />
-import { GetNotes, ReadNote, WriteNote } from "@/shared/types"
+import {
+  DeleteNote,
+  GetNotes,
+  NewNote,
+  ReadNote,
+  WriteNote,
+} from "@/shared/types"
 
 declare namespace NodeJS {
   interface ProcessEnv {
@@ -35,6 +41,8 @@ declare global {
       getNotes: GetNotes
       readNote: ReadNote
       writeNote: WriteNote
+      deleteNote: DeleteNote
+      newNote: NewNote
     }
   }
 }

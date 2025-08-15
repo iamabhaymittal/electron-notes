@@ -6,3 +6,5 @@ export type WriteNote = (
   title: NoteInfo["title"],
   content: NoteContent,
 ) => Promise<void>
+export type DeleteNote = (title: NoteInfo["title"]) => Promise<void>
+export type NewNote = (title: NoteInfo["title"]) => Promise<void>

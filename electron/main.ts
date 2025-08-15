@@ -1,8 +1,14 @@
 import { app, BrowserWindow, ipcMain } from "electron"
 import { fileURLToPath } from "node:url"
 import path from "node:path"
-import { getNotes, readNote, writeNote } from "./lib"
-import { GetNotes, ReadNote, WriteNote } from "@/shared/types"
+import { deleteNote, getNotes, newNote, readNote, writeNote } from "./lib"
+import {
+  DeleteNote,
+  GetNotes,
+  NewNote,
+  ReadNote,
+  WriteNote,
+} from "@/shared/types"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -78,6 +84,12 @@ app.whenReady().then(() => {
   )
   ipcMain.handle("writeNote", (_, ...args: Parameters<WriteNote>) =>
     writeNote(...args),
+  )
+  ipcMain.handle("deleteNote", (_, ...args: Parameters<DeleteNote>) =>
+    deleteNote(...args),
+  )
+  ipcMain.handle("newNote", (_, ...args: Parameters<NewNote>) =>
+    newNote(...args),
   )
   createWindow()
 })

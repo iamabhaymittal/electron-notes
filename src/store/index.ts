@@ -22,12 +22,19 @@ const selectedNoteAtomAsync = atom(async (get) => {
 
   const selectedNote = notes[selectedNoteIndex]
 
-  const noteContent = await window.context.readNote(selectedNote.title)
-  if (!noteContent) return null
-
-  return {
-    ...selectedNote,
-    content: noteContent,
+  try {
+    const noteContent = await window.context.readNote(selectedNote.title)
+    return {
+      ...selectedNote,
+      content: noteContent || "",
+    }
+  } catch (error) {
+    console.error("Error reading note:", error)
+    // Return the note with empty content if reading fails
+    return {
+      ...selectedNote,
+      content: "",
+    }
   }
 })
 
@@ -70,27 +77,36 @@ export const saveNoteAtom = atom(
   },
 )
 
-export const createEmptyNoteAtom = atom(null, (get, set) => {
+export const createEmptyNoteAtom = atom(null, async (get, set) => {
   const notes = get(notesAtom)
 
   if (!notes) return
-
-  const title = `Note ${notes.length + 1}`
+  const title = `Note-${notes.length + 1}`
   const newNote: NoteInfo = {
     title,
     lastEditTime: Date.now(),
   }
 
-  set(notesAtom, [newNote, ...notes.filter((note) => note.title !== title)])
+  try {
+    // Create the note file first
+    await window.context.newNote(title)
 
-  set(selectedNoteIndexAtom, 0)
+    // Only update the UI after successful file creation
+    set(notesAtom, [newNote, ...notes.filter((note) => note.title !== title)])
+    set(selectedNoteIndexAtom, 0)
+  } catch (error) {
+    console.error("Failed to create new note:", error)
+    // Don't update the UI if file creation failed
+  }
 })
 
-export const deleteNoteAtom = atom(null, (get, set) => {
+export const deleteNoteAtom = atom(null, async (get, set) => {
   const notes = get(notesAtom)
   const selectedNote = get(selectedNoteAtom)
 
   if (selectedNote === null || !notes) return
+
+  await window.context.deleteNote(selectedNote.title)
 
   set(
     notesAtom,
