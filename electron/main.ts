@@ -1,7 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { app, BrowserWindow, ipcMain } from "electron"
 import { fileURLToPath } from "node:url"
 import path from "node:path"
+import { getNotes, readNote, writeNote } from "./lib"
+import { GetNotes, ReadNote, WriteNote } from "@/shared/types"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -18,8 +19,11 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
 let win: BrowserWindow | null
 
 function createWindow() {
+  const iconPath = process.env.VITE_PUBLIC
+    ? path.join(process.env.VITE_PUBLIC, "electron-vite.svg")
+    : "" // Provide a default value or handle the undefined case
   win = new BrowserWindow({
-    icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
+    icon: iconPath,
     webPreferences: {
       preload: path.join(__dirname, "preload.mjs"),
     },
@@ -65,7 +69,18 @@ app.on("activate", () => {
   }
 })
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  ipcMain.handle("getNotes", (_, ...args: Parameters<GetNotes>) =>
+    getNotes(...args),
+  )
+  ipcMain.handle("readNote", (_, ...args: Parameters<ReadNote>) =>
+    readNote(...args),
+  )
+  ipcMain.handle("writeNote", (_, ...args: Parameters<WriteNote>) =>
+    writeNote(...args),
+  )
+  createWindow()
+})
 
 ipcMain.on("ping", () => {
   console.log("pong")

@@ -1,8 +1,15 @@
 import { ipcRenderer, contextBridge } from "electron"
+import { GetNotes, ReadNote, WriteNote } from "@/shared/types"
 
 // --------- Expose some API to the Renderer process ---------
-contextBridge.exposeInMainWorld("ipcRenderer", {
+contextBridge.exposeInMainWorld("context", {
   locale: navigator.language,
+  getNotes: (...args: Parameters<GetNotes>) =>
+    ipcRenderer.invoke("getNotes", ...args),
+  readNote: (...args: Parameters<ReadNote>) =>
+    ipcRenderer.invoke("readNote", ...args),
+  writeNote: (...args: Parameters<WriteNote>) =>
+    ipcRenderer.invoke("writeNote", ...args),
   on(...args: Parameters<typeof ipcRenderer.on>) {
     const [channel, listener] = args
     return ipcRenderer.on(channel, (event, ...args) => listener(event, ...args))

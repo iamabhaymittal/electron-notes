@@ -1,4 +1,5 @@
 /// <reference types="vite-plugin-electron/electron-env" />
+import { GetNotes, ReadNote, WriteNote } from "@/shared/types"
 
 declare namespace NodeJS {
   interface ProcessEnv {
@@ -25,5 +26,15 @@ declare namespace NodeJS {
 interface Window {
   ipcRenderer: import("electron").IpcRenderer & {
     locale: string
+  }
+}
+
+declare global {
+  interface Window {
+    context: {
+      getNotes: GetNotes
+      readNote: ReadNote
+      writeNote: WriteNote
+    }
   }
 }
